@@ -1,6 +1,10 @@
 import { ChevronRight } from "lucide-react";
 
-export default function CourseCard() {
+type typeCourse = {
+  title : string;
+  slug: string
+}
+export default function CourseCard({title, slug} : typeCourse) {
   return (
     <div className="flex items-center bg-white rounded-lg shadow p-3 w-full cursor-pointer hover:bg-gray-50">
       {/* Icon / thumbnail */}
@@ -9,9 +13,9 @@ export default function CourseCard() {
       {/* Teks */}
       <div className="flex-1 ml-3">
         <h3 className="text-sm font-semibold text-gray-800">
-          Storytelling dalam Pemasaran
+          {title}
         </h3>
-        <p className="text-xs text-gray-500">09:00 - 11:00 WIB, Mr. Jam</p>
+        <p className="text-xs text-gray-500">{slug}</p>
       </div>
 
       {/* Panah kanan */}

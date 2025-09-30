@@ -18,6 +18,17 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+
+type Moodle = {
+  id: number;
+  title: string;
+  content: string;
+  slug: string;
+  image: string | null;
+  user_id: number;
+  created_at: string;
+};
+
 const data = [
   {
     image: "/programing.jpg",
@@ -50,12 +61,22 @@ const data = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const res = await fetch("http://localhost:4001/api/moodles", {
+    cache: "no-cache", // mirip getStaticProps
+    next: {revalidate: 60}
+  });
+
+  if (!res.ok) {
+    throw new Error("Gagal fetch moodles");
+  }
+
+  const moodles: Moodle[] = await res.json();
   return (
     <div className="w-full h-full flex flex-col bg-[#efefef]">
       <Header />
       <div className="w-full h-[calc(100vh-50px)] flex">
-        <SidebarComponent />
+        <SidebarComponent  />
         <div className="w-[calc(100%)] px-3 py-2   overflow-y-auto flex gap-1">
           <div className="md:w-[calc(100%-300px)] w-full flex flex-col gap-2">
             <Jumbotron />
@@ -112,9 +133,12 @@ export default function Home() {
             <div className="w-full">
               <h2>JADWAL PEMATERI</h2>
               <div className="flex flex-col gap-3">
-                <CourseCard />
-                <CourseCard />
-                <CourseCard />
+                {moodles.length !== 0 ? (
+                  moodles.map((item: Moodle) => (
+                    <CourseCard key={item.slug} title={item.title} slug={item.slug}/>
+                  ))
+
+                ) : <></>}
               </div>
             </div>
 

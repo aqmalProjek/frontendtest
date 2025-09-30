@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie"; // npm install js-cookie
+import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,21 +18,20 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:4000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+      const res = await axios.post(`http://localhost:4001/api/users/login`, {
+        username,
+        password
       });
 
-      const data = await res.json();
+      const data : any = res.data;
 
-      if (!res.ok) {
+      if (!res) {
         throw new Error(data.message || "Login failed");
       }
 
       // Simpan token ke localStorage
       localStorage.setItem("token", data.token);
-Cookies.set("token", data.token); // simpan token ke cookie
+      Cookies.set("token", data.token); // simpan token ke cookie
 
       // Redirect ke dashboard (atau halaman lain)
       router.push("/");

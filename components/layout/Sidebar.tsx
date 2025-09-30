@@ -1,3 +1,4 @@
+"use client"
 import {
     Calendar,
   LayoutDashboard,
@@ -9,9 +10,19 @@ import {
   Users2,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const SidebarComponent = () => {
+  const router = useRouter();
+  const handleLogout = async () => {
+    await fetch("/api/logout", {
+      method: "POST",
+    });
+
+    // redirect ke halaman login
+    router.push("/login");
+  };
   return (
   <div className="h-full bg-slate-800 text-white rounded-tr-4xl pt-8 items-center flex flex-col gap-2 
                   w-[60px] md:w-[250px] transition-all duration-300">
@@ -84,7 +95,7 @@ const SidebarComponent = () => {
     <div className="hidden md:block w-[80%] h-[2px] bg-white"></div>
 
     {/* Menu Log Out */}
-    <div className="rounded w-[80%] h-[40px] box-border px-2 py-2 text-white flex items-center justify-center md:justify-start">
+    <div className="rounded w-[80%] h-[40px] box-border px-2 py-2 text-white flex items-center justify-center md:justify-start cursor-pointer" onClick={handleLogout}>
       <div className="w-[30px]">
         <div className="relative w-[25px] h-[25px]">
           <Image
@@ -96,7 +107,7 @@ const SidebarComponent = () => {
           />
         </div>
       </div>
-      <div className="hidden md:block w-[calc(100%-60px)] pl-2">Log Out</div>
+      <div className="hidden md:block w-[calc(100%-60px)] pl-2" >Log Out</div>
     </div>
   </div>
 );

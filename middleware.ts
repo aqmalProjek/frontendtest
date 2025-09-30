@@ -1,28 +1,26 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Daftar route yang butuh login
-const protectedRoutes = ["/"];
-
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
+  console.log('token',token);
+  
+  const { pathname } = request.nextUrl;
 
-  // Jika user belum login dan mencoba akses halaman protected
-  if (protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+  // 🔹 Jika ke halaman login & sudah punya token → redirect ke home
+  if (pathname.startsWith("/login") && token) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Jika user sudah login tapi coba buka /login → redirect ke home
-  if (request.nextUrl.pathname.startsWith("/login") && token) {
-    return NextResponse.redirect(new URL("/", request.url));
+  // 🔹 Jika ke halaman protected & belum ada token → redirect ke login
+  if (pathname === "/" && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
-// Tentukan route mana yang dipantau middleware
+// Tentukan route mana saja yang dipantau middleware
 export const config = {
-  matcher: ["/", "/login"],
+  matcher: ["/", "/login"], // bisa ditambah /dashboard, dll
 };
