@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto  } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+const roboto = Roboto({
+  subsets: ["latin"], // subset latin cukup untuk bahasa Indonesia & Inggris
+  weight: ["400", "500", "700"], // pilih bobot yang mau dipakai
+  variable: "--font-roboto", // optional: biar bisa dipakai di Tailwind
 });
 
 const geistMono = Geist_Mono({
@@ -23,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${roboto.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.className}`}
       >
         {children}
       </body>
